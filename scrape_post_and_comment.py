@@ -71,10 +71,10 @@ def set_recursion_limit(total_comments):
 ####################################################################
 
 # first request will be of the type:
-# https://graph.facebook.com/v2.11/page_id/posts?access_token=....
+# https://graph.facebook.com/v7.0/v2.11/page_id/posts?access_token=....
 # then, will be gather all the values next in the json file in order to do at the next request
 def scrape_first_posts_in_page(page_id, access_token):
-    base = "https://graph.facebook.com/v2.11/"
+    base = "https://graph.facebook.com/v7.0/"
     parameters = "&access_token={}".format(access_token)
     fields = "?fields=posts"
     num_page = 1
@@ -151,8 +151,8 @@ def loops_for_scraping_comments(num_page, data):
 
 def scrape_first_comments_from_post_id(post_id, access_token):
     # with filter=stream should also gather the aswers to comments, but it seems doesn't work
-    # https://graph.facebook.com/v2.11/post_id/comments?filter=stream&summary=true&access_token=2081983152047773|cUqdwRV6VnEZBTwAwmv5wdBQEBw
-    base = "https://graph.facebook.com/v2.11/"
+    # https://graph.facebook.com/v7.0/v2.11/post_id/comments?filter=stream&summary=true&access_token=2081983152047773|cUqdwRV6VnEZBTwAwmv5wdBQEBw
+    base = "https://graph.facebook.com/v7.0/"
     parameters = "&access_token={}".format(access_token)
     fields = "/comments?filter=stream&summary=true"
 
@@ -221,11 +221,11 @@ if __name__ == '__main__':
 
     print("Request token")
     #new access_token
-    access_token_request = request_until_succeed("https://graph.facebook.com/v2.11/oauth/access_token?client_id=" + app_id + "&client_secret=" + app_secret + "&grant_type=client_credentials")
+    access_token_request = request_until_succeed("https://graph.facebook.com/v7.0/oauth/access_token?client_id=" + app_id + "&client_secret=" + app_secret + "&grant_type=client_credentials")
     access_token = json.loads(access_token_request)["access_token"] #!type unicode!
     print("fresh access token: " + access_token + "\n")
 
-    url="https://graph.facebook.com/v2.11/"+ page_id +"/posts?access_token=" + access_token + "&limit=25"
+    url="https://graph.facebook.com/v7.0/"+ page_id +"/posts?access_token=" + access_token + "&limit=25"
 
     scrape_starttime = datetime.datetime.now()
     # start scraping's post phase
@@ -236,8 +236,8 @@ if __name__ == '__main__':
 
     # start from a block's posts
     # files with next_value extension are:
-    # 1.next_value = i post che vanno da 26 a 50
-    # 2.next_value = i post che vanno da 51 a 75 etc...
+    # 1.next_value = i post from 26 to 50
+    # 2.next_value = i post from 51 to 75 etc...
     scrape_all_posts_in_page(url, num_page)
 
     print("\nScraping's posts phase stop...")
